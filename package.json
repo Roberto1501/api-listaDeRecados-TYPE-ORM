@@ -9,12 +9,7 @@
     "dev:debug": "ts-node-dev --inspect --respaw --transpile-only .src/index.ts",
     "postinstall": "tsc",
     "start": "node ./build/index.js",
-    "build": "tsc",
-    "typeorm": "typeorm-ts-node-commonjs",
-    "typeorm:create": "typeorm migration:create",
-    "typeorm:run": "npm run typeorm migration:run -- -d ./src/database/config/database.config.ts",
-    "typeorm:revert": "npm run typeorm migration:revert -- -d ./src/database/config/database.config.ts",
-    "typeorm:generate": "npm run typeorm migration:generate -- -d ./src/database/config/database.config.ts"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -35,7 +30,6 @@
     "http-status-codes": "^2.2.0",
     "pg": "^8.11.1",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.3.11",
     "uuidv4": "^6.2.13"
   }
 }
