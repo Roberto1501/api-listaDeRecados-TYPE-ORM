@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import "reflect-metadata";
 import { DataBase } from "./database/config/database.connection";
 import { UserRoutes } from "./routes/user.routes";
+import { ErrandRoutes } from "./routes/errand.routes";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(cors());
 
 //Users
 app.use("/", UserRoutes());
+app.use("/", ErrandRoutes())
 
 
 // inicializar o banco de dados, antes do listen

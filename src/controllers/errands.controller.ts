@@ -7,7 +7,7 @@ import { UserRepository } from "../repositories/user.repository";
 import { ErrandRepository } from "../repositories/errand.repository";
 
 export class ErrandController {
-  public async create(req: Request, res: Response) {
+  public async criarRecado(req: Request, res: Response) {
     try {
       const { userId } = req.params;
       const { title, description, type } = req.body;
@@ -15,11 +15,18 @@ export class ErrandController {
       const user = await new UserRepository().getById(userId);
 
       if (!user) {
-        return ApiResponse.notFound(res, "User");
+        return res.status(400).send({
+          success: false,
+          message: "Erro ao criar recado"
+        })
       }
-
+      const repository = new ErrandRepository()
       const newErrand = new Errand(title, description, type, user);
-      await new ErrandRepository().create(newErrand);
+      const recado = await repository.criarRecado(newErrand);
+
+      if(!recado){
+        return ApiResponse.notFound(res, "Erro a criar Recado")
+      }
 
       return ApiResponse.success(
         res,
