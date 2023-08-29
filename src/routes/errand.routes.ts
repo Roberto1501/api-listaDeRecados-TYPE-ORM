@@ -6,6 +6,7 @@ export const ErrandRoutes = () => {
         mergeParams: true
     })
     app.post("/create-recado/:userId",  new ErrandController().criarRecado);
+    app.get("/listar/:userId", new ErrandController().listar)
    
 
 

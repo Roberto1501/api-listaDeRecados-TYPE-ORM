@@ -1,5 +1,5 @@
-import {Entity, PrimaryColumn, Column} from "typeorm"
-
+import {Entity, PrimaryColumn, Column, OneToMany} from "typeorm"
+import { ErrandEntity } from "./errand.entity";
 @Entity("user")
 
 export class UserEntity{
@@ -16,4 +16,6 @@ export class UserEntity{
     @Column()
     password!:string
 
+    @OneToMany(() => ErrandEntity, (errand) => errand.user )
+    errand!: ErrandEntity[]
 }

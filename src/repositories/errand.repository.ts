@@ -1,14 +1,18 @@
 import { ErrandEntity } from "../database/entities/errand.entity";
 import { DataBase } from "../database/config/database.connection";
-import { Errand } from "../models/errand";
+import { Errand, StatusErrand } from "../models/errand";
 import { User } from "../models/user";
+import { UserRepository } from "./user.repository";
+
+interface ErrandType {
+    userId: string;
+    type?: StatusErrand;
+}
 
 export class ErrandRepository {
     private repository = DataBase.connection.getRepository(ErrandEntity)
 
-    public static mapRowToModel(errand: ErrandEntity, user:User): Errand {
-        return Errand.create(errand, user);
-    }
+
 
 
     public async criarRecado(newErrand: Errand) {
@@ -17,7 +21,7 @@ export class ErrandRepository {
             title: newErrand.title,
             description: newErrand.description,
             type: newErrand.type,
-            user: newErrand.user.id
+            idUser: newErrand.user.id
         })
 
         const result = await this.repository.save(createdErrand)
@@ -25,6 +29,24 @@ export class ErrandRepository {
         return result
     }
 
+    public async listErrands(params: ErrandType){
+        const result = await this.repository.find({
+            where: {
+                idUser: params.userId,
+                type: params.type
+            },
+            relations: {
+                user: true
+            }
 
+        });
+        return result.map((item) => ErrandRepository.mapRowToModel(item));
+    }
+
+
+    public static mapRowToModel(errand: ErrandEntity): Errand {
+        const user = UserRepository.mapRowToModel(errand.user)
+        return Errand.create(errand, user);
+    }
 
 }

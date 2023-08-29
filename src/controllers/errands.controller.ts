@@ -38,12 +38,12 @@ export class ErrandController {
     }
   }
 
-  public async list(req: Request, res: Response) {
+  public async listar(req: Request, res: Response) {
     try {
       const { userId } = req.params;
-      const { type } = req.query;
+      const { type } = req.body;
 
-      let errands = await new ErrandRepository().list({
+      let errands = await new ErrandRepository().listErrands({
         userId: userId,
         type: type as StatusErrand,
       });
