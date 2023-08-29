@@ -12,9 +12,6 @@ interface ErrandType {
 export class ErrandRepository {
     private repository = DataBase.connection.getRepository(ErrandEntity)
 
-
-
-
     public async criarRecado(newErrand: Errand) {
         const createdErrand = this.repository.create({
             id: newErrand.id,
@@ -29,7 +26,7 @@ export class ErrandRepository {
         return result
     }
 
-    public async listErrands(params: ErrandType){
+    public async listErrands(params: ErrandType) {
         const result = await this.repository.find({
             where: {
                 idUser: params.userId,
@@ -43,6 +40,34 @@ export class ErrandRepository {
         return result.map((item) => ErrandRepository.mapRowToModel(item));
     }
 
+    public async update(errand: ErrandEntity) {
+        const result = await this.repository.update(
+            {
+                id: errand.id,
+            },
+            {
+                title: errand.title,
+                description: errand.description,
+                type: errand.type
+            }
+        );
+
+        result.affected ?? 0;
+    }
+
+    public async getByIdErrand(idErrand: string) {
+        const result = await this.repository.findOne({
+            where: { id: idErrand }
+        });
+
+        return result
+    }
+
+    public async delete(id: string) {
+        const result = await this.repository.delete({id});
+
+        return result.affected ?? 0;
+    }
 
     public static mapRowToModel(errand: ErrandEntity): Errand {
         const user = UserRepository.mapRowToModel(errand.user)

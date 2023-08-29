@@ -59,7 +59,7 @@ export class ErrandController {
   public async update(req: Request, res: Response) {
     try {
       const { userId, idErrand } = req.params;
-      const { title, description } = req.body;
+      const { title, description, type } = req.body;
 
       const user = await new UserRepository().getById(userId);
 
@@ -76,19 +76,17 @@ export class ErrandController {
         return ApiResponse.notFound(res, "Errand");
       }
 
-      // if (!title || !description) {
-      //   return ApiResponse.invalid(res, "Errand");
-      // }
-
+    
       errand.title = title;
       errand.description = description;
+      errand.type = type;
 
-      // salvar...
       const result = await errandRepository.update(errand);
-      // console.log(result);
 
-      const errands = await errandRepository.list({
+      const errands = await errandRepository.listErrands({
         userId: userId,
+        type: type as StatusErrand,
+
       });
 
       return ApiResponse.success(
@@ -101,7 +99,7 @@ export class ErrandController {
     }
   }
 
-  public async delete(req: Request, res: Response) {
+  public async deletar(req: Request, res: Response) {
     try {
       const { userId, idErrand } = req.params;
 
@@ -118,7 +116,7 @@ export class ErrandController {
         return ApiResponse.notFound(res, "Errand");
       }
 
-      const errands = await errandRepository.list({
+      const errands = await errandRepository.listErrands({
         userId,
       });
 
