@@ -1,5 +1,7 @@
 import { DataSource } from "typeorm";
 import * as dotenv from "dotenv"
+import { ErrandEntity } from "../entities/errand.entity";
+import { UserEntity } from "../entities/user.entity";
 
 dotenv.config()
 
@@ -13,7 +15,15 @@ const config = new DataSource({
     },
     synchronize: false,
 
-    schema:"BancoTrabalhoFinal"
+    schema:"BancoTrabalhoFinal",
+
+   
+    // entities:[UserEntity,ErrandEntity],
+    entities:["src/database/entities/**/*.ts"],
+    migrations:["src/database/migrations/**/*.ts"],
+
+
+
 })
 
 export default config

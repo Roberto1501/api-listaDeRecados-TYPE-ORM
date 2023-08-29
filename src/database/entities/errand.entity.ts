@@ -1,7 +1,7 @@
 import {Entity, PrimaryColumn, Column} from "typeorm"
 
 
-@Entity("Errand")
+@Entity("errand")
 
 export class ErrandEntity{
     
