@@ -3,6 +3,7 @@ import cors from "cors";
 import * as dotenv from "dotenv";
 import "reflect-metadata";
 import { DataBase } from "./database/config/database.connection";
+import { UserRoutes } from "./routes/user.routes";
 
 dotenv.config();
 
@@ -11,6 +12,8 @@ app.use(express.json());
 app.use(cors());
 
 //Users
+app.use("/", UserRoutes());
+
 
 // inicializar o banco de dados, antes do listen
 DataBase.connect().then(() => {

@@ -3,13 +3,14 @@ import { UserRepository } from "../repositories/user.repository";
 import { ApiResponse } from "../utils/Api.response.adapter";
 import { User } from "../models/user";
 
+
 export class UserController {
   public async create(req: Request, res: Response) {
     try {
       const { name, email, password } = req.body;
       const repository = new UserRepository();
 
-      const validEmail = await repository.getByEmail(email);
+      const validEmail = await repository.checkEmail(email);
 
       if (validEmail) {
         return ApiResponse.invalid(res, "E-mail");
@@ -21,7 +22,7 @@ export class UserController {
       return ApiResponse.success(
         res,
         "User successufully created",
-        result.toJson()
+        result
       );
     } catch (error: any) {
       return ApiResponse.genericError(res, error);
@@ -29,10 +30,14 @@ export class UserController {
   }
 
   //ok
-  public async list(req: Request, res: Response) {
+  public async listAllUsers(req: Request, res: Response) {
     try {
       const repository = new UserRepository();
-      const result = await repository.list();
+      const result = await repository.listAllUsers();
+
+      if(result.length === 0){
+        return ApiResponse.notFound(res, "Lista de usuario vazia")
+      };
 
       return ApiResponse.success(
         res,
@@ -45,7 +50,7 @@ export class UserController {
   }
 
   // ok
-  public async getById(req: Request, res: Response) {
+  public async getUserById(req: Request, res: Response) {
     try {
       const { id } = req.params;
 
@@ -56,11 +61,9 @@ export class UserController {
         return ApiResponse.notFound(res, "User ");
       }
 
-      return ApiResponse.success(
-        res,
-        "User successfully obtained",
-        result.toJson()
-      );
+      return ApiResponse.success(res, "Login was successfuly",{
+        data: result.toJson()
+       });
     } catch (error: any) {
       return ApiResponse.genericError(res, error);
     }
@@ -71,7 +74,6 @@ export class UserController {
     try {
       const { email, password } = req.body;
       const repository = new UserRepository();
-      const login = await repository.getByEmail(email);
 
       if (!email) {
         return ApiResponse.fieldNotProvided(res, "E-mail");
@@ -80,19 +82,16 @@ export class UserController {
         return ApiResponse.fieldNotProvided(res, "Password");
       }
 
-      const user = await new UserRepository().getByEmail(email);
+      const user = await  repository.login(email,password);
 
       if (!user) {
         return ApiResponse.invalidCredentials(res);
       }
 
-      if (user.password !== password) {
-        return ApiResponse.invalidCredentials(res);
-      }
+     
 
-      return ApiResponse.success(res, "Successful login", {
-        id: login?.id,
-        email: login?.email,
+      return ApiResponse.success(res, "Login was successfuly",{
+       data: user.toJson()
       });
     } catch (error: any) {
       return ApiResponse.genericError(res, error);
