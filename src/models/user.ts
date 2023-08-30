@@ -10,7 +10,6 @@ export class User {
   ) {
     this._id = createUuid();
   }
-  // cade o push p dentro desse array?
 
   public get id() {
     return this._id;
